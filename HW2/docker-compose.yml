@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  init:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: init-container
+    command: ["sh", "-c", "echo 'Initializing...'; sleep 5"]
+    depends_on:
+      - app
+    networks:
+      - mynetwork
+    env_file:
+      - .env
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app-container
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    volumes:
+      - jupyter-data:/jupyter
+    ports:
+      - "${JUPYTER_PORT}:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - mynetwork
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+  db:
+    image: postgres:13
+    container_name: db-container
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - mynetwork
+    env_file:
+      - .env
+
+volumes:
+  jupyter-data:
+  db-data:
+
+networks:
+  mynetwork:
