@@ -1,0 +1,9 @@
+FROM python:latest
+
+RUN apt-get update
+RUN apt-get install -y python3-pip
+RUN pip install jupyter
+
+RUN apt-get install -y vim
+
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--no-browser", "--allow-root"]
