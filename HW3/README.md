@@ -175,3 +175,10 @@ spec:
       restartPolicy: Always
       dnsPolicy: ClusterFirst
 ```
+
+<figure>
+  <img
+  src="https://github.com/Uberwald/GAN_study/blob/main/HW1/1.2.Picture/1.png"
+  alt="Картинка 1">
+  <figcaption>Картинка 1</figcaption>
+</figure>
