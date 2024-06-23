@@ -309,34 +309,35 @@ spec:
 
 <figure>
   <img
-  src="https://github.com/Uberwald/Containers/blob/main/HW3/1.jpg"
+  src="https://github.com/Uberwald/Containers/blob/main/HW4/1.jpg"
   alt="Картинка 1">
   <figcaption>Картинка 1</figcaption>
 </figure>
 
 <figure>
   <img
-  src="https://github.com/Uberwald/Containers/blob/main/HW3/2.jpg"
+  src="https://github.com/Uberwald/Containers/blob/main/HW4/2.jpg"
   alt="Картинка 1">
   <figcaption>Картинка 1</figcaption>
 </figure>
 
 <figure>
   <img
-  src="https://github.com/Uberwald/Containers/blob/main/HW3/3.jpg"
+  src="https://github.com/Uberwald/Containers/blob/main/HW4/3.jpg"
   alt="Картинка 1">
   <figcaption>Картинка 1</figcaption>
 </figure>
 
-## Вопросы
-1. Вопрос: важен ли порядок выполнения этих манифестов? Почему?
+<figure>
+  <img
+  src="https://github.com/Uberwald/Containers/blob/main/HW4/4.jpg"
+  alt="Картинка 1">
+  <figcaption>Картинка 1</figcaption>
+</figure>
 
-Да, порядок выполнения манифестов важен. Сначала создаем pg_configmap.yml, так как он содержит настройки для подов. Затем pg_service.yml, чтобы другие поды могли найти PostgreSQL. И наконец, pg_deployment.yml, чтобы запустить контейнеры с PostgreSQL, используя настройки из ConfigMap и регистрируясь в Service.   
-
-2. Вопрос: что (и почему) произойдет, если отскейлить количество реплик postgres-deployment в 0, затем обратно в 1, после чего попробовать снова зайти на Nextcloud? 
-Если отскейлить количество реплик PostgreSQL до 0, затем обратно до 1, и попробовать снова зайти на Nextcloud, то:
-
-При скалировании до 0 поды PostgreSQL будут удалены, и Nextcloud потеряет доступ к базе данных, из-за чего работать не будет.
-При скалировании обратно до 1 под PostgreSQL будет создан заново и восстановит доступ к базе данных.
-Если зайти на Nextcloud сразу после скалирования, возможны временные ошибки, пока база данных не станет полностью доступной. После запуска PostgreSQL Nextcloud должен заработать нормально.
-
+<figure>
+  <img
+  src="https://github.com/Uberwald/Containers/blob/main/HW4/5.jpg"
+  alt="Картинка 1">
+  <figcaption>Картинка 1</figcaption>
+</figure>
