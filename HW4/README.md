@@ -174,21 +174,6 @@ spec:
       volumes:
         - name: postgres-storage
           emptyDir: {}
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres-service
-  labels:
-    app: postgres
-spec:
-  type: NodePort
-  ports:
-    - port: 5432
-  selector:
-    app: postgres
 ```
 ## nextcloud-env.yml
 ```go
@@ -201,8 +186,12 @@ metadata:
 data:
   NEXTCLOUD_UPDATE: "1"
   ALLOW_EMPTY_PASSWORD: "yes"
+  POSTGRES_HOST: "postgres-service"
+  POSTGRES_DB: "postgres"
+  NEXTCLOUD_TRUSTED_DOMAINS: "127.0.0.1"
 ```
-## nextcloud.yml
+
+## nextcloud-secret.yml
 ```go
 apiVersion: v1
 kind: Secret
@@ -213,21 +202,12 @@ metadata:
 type: Opaque
 stringData:
   NEXTCLOUD_ADMIN_PASSWORD: "literally_any_password"
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: "any_password_u_want"
+```
 
----
-
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: nextcloud-env-configmap
-  labels:
-    app: nextcloud
-data:
-  NEXTCLOUD_UPDATE: "1"
-  ALLOW_EMPTY_PASSWORD: "yes"
-
----
-
+## nextcloud-deployment.yml
+```go
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -261,33 +241,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: nextcloud-env-configmap
-          env:
-            - name: POSTGRES_HOST
-              value: postgres-service
-            - name: POSTGRES_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-configmap
-                  key: POSTGRES_DB
-            - name: NEXTCLOUD_TRUSTED_DOMAINS
-              value: "127.0.0.1"
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_PASSWORD
-            - name: NEXTCLOUD_ADMIN_USER
-              value: admin
-            - name: NEXTCLOUD_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: nextcloud-secret
-                  key: NEXTCLOUD_ADMIN_PASSWORD
+            - secretRef:
+                name: nextcloud-secret
           livenessProbe:
             exec:
               command:
